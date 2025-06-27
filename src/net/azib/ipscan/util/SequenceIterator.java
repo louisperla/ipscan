@@ -14,29 +14,37 @@ import java.util.Iterator;
  * @author Anton Keks
  */
 public class SequenceIterator<E> implements Iterator<E> {
-	private Iterator<E>[] iterators;
-	int currentIndex = 0;
+       private final Iterator<E>[] iterators;
+       int currentIndex = 0;
 	
-	public SequenceIterator(Iterator<E>... iterators) {
-		this.iterators = iterators;
-		
-		// check that last iterator is not empty (otherwise the code below won't work)
-		if (!iterators[iterators.length-1].hasNext())
-			throw new IllegalArgumentException();
-	}
+       @SafeVarargs
+       public SequenceIterator(Iterator<E>... iterators) {
+               this.iterators = iterators;
 
-	public boolean hasNext() {
-		// combined iterator has elements until the last iterator has them
-		return iterators[iterators.length-1].hasNext();
-	}
+               // check that at least one iterator has elements
+               boolean any = false;
+               for (Iterator<E> it : iterators) {
+                       if (it.hasNext()) { any = true; break; }
+               }
+               if (!any)
+                       throw new IllegalArgumentException();
+       }
 
-	public E next() {
-		// take the next iterator if current ran out of elements
-		if (!iterators[currentIndex].hasNext())
-			currentIndex++;
-		
-		return iterators[currentIndex].next();
-	}
+       public boolean hasNext() {
+               shiftToNextAvailable();
+               return currentIndex < iterators.length;
+       }
+
+       public E next() {
+               shiftToNextAvailable();
+               return iterators[currentIndex].next();
+       }
+
+       private void shiftToNextAvailable() {
+               while (currentIndex < iterators.length && !iterators[currentIndex].hasNext()) {
+                       currentIndex++;
+               }
+       }
 
 	public void remove() {
 		iterators[currentIndex].remove();

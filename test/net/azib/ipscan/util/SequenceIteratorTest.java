@@ -40,11 +40,24 @@ public class SequenceIteratorTest {
 		assertFalse(i.hasNext());
 	}
 
-	@Test
-	public void firstEmpty() throws Exception {
-		Iterator<Integer> i = new SequenceIterator<Integer>(Arrays.<Integer>asList().iterator(), Arrays.asList(3).iterator());
-		assertTrue(i.hasNext());
-		assertEquals(3, (int)i.next());
-		assertFalse(i.hasNext());
-	}
+        @Test
+        public void firstEmpty() throws Exception {
+                Iterator<Integer> i = new SequenceIterator<Integer>(Arrays.<Integer>asList().iterator(), Arrays.asList(3).iterator());
+                assertTrue(i.hasNext());
+                assertEquals(3, (int)i.next());
+                assertFalse(i.hasNext());
+        }
+
+        @Test
+        public void multipleEmptyIterators() throws Exception {
+                Iterator<Integer> i = new SequenceIterator<Integer>(
+                                Arrays.<Integer>asList().iterator(),
+                                Arrays.<Integer>asList().iterator(),
+                                Arrays.asList(4, 5).iterator());
+                assertTrue(i.hasNext());
+                assertEquals(4, (int)i.next());
+                assertTrue(i.hasNext());
+                assertEquals(5, (int)i.next());
+                assertFalse(i.hasNext());
+        }
 }
