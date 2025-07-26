@@ -1,0 +1,10 @@
+// !\$*UTF8*
+{
+    archiveVersion = 1;
+    classes = {};
+    objectVersion = 52;
+    objects = {
+        /* project objects would normally go here */
+    };
+    rootObject = 000000000000000000000000;
+}
