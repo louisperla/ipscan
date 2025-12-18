@@ -1,0 +1,186 @@
+:root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --primary: #1c7ed6;
+    --primary-dark: #1864ab;
+    --text: #1f2933;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --success: #12b886;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.page {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.title-block h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.subtitle {
+    margin: 4px 0 0;
+    color: var(--muted);
+}
+
+.user {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border);
+}
+
+.card-header h2 {
+    margin: 0;
+}
+
+.card-header p {
+    margin: 4px 0 12px;
+    color: var(--muted);
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn.primary {
+    background: var(--primary);
+    color: white;
+    font-size: 16px;
+    padding: 14px 22px;
+    box-shadow: 0 8px 20px rgba(28, 126, 214, 0.3);
+}
+
+.btn.primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn.secondary {
+    background: #f1f5f9;
+    color: var(--primary-dark);
+    border: 1px solid var(--border);
+}
+
+.btn.secondary:hover {
+    background: #e7f0fb;
+}
+
+form input[type="file"] {
+    display: none;
+}
+
+.table-wrapper {
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead {
+    background: #f8fafc;
+}
+
+table th,
+table td {
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.empty {
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+}
+
+.progress {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress.hidden {
+    display: none;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 12px;
+    background: #dbeafe;
+    border-radius: 999px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--primary), #4dabf7);
+    width: var(--width, 0%);
+}
+
+#progressBar {
+    background: linear-gradient(90deg, #4dabf7, var(--primary));
+    height: 12px;
+    border-radius: 999px;
+    transition: width 0.15s ease-out;
+}
+
+#progressText {
+    min-width: 40px;
+    font-weight: 700;
+}
+
+.status {
+    text-align: center;
+    color: var(--muted);
+    font-weight: 600;
+    margin-top: 10px;
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Secure Cloud Storage System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <h1>Secure Cloud Storage System</h1>
+      <div class="userBox">[User: Louis]</div>
+    </header>
+
+    <section class="uploadSection">
+      <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        <input id="fileInput" class="fileInput" type="file" name="file" required>
+        <button class="btn btnPrimary" type="submit">Upload File</button>
+
+        <div id="uploadProgressWrap" class="progressWrap">
+          <div class="progressBar"><div id="uploadBar"></div></div>
+          <div id="uploadPct" class="progressPct">0%</div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>My Encrypted Files</h2>
+
+      {% if files %}
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>File Name</th>
+              <th>Size</th>
+              <th>Date Uploaded</th>
+              <th class="right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in files %}
+            <tr>
+              <td class="mono">{{ f.name }}</td>
+              <td>{{ f.size }}</td>
+              <td>{{ f.date }}</td>
+              <td class="right">
+                <a class="btn btnOutline btnSmall" href="{{ url_for('download', file_id=f.id) }}">Download</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="muted">No encrypted files yet. Upload a file to get started.</p>
+      {% endif %}
+
+      <p class="status">Status: All files encrypted using AES-256 + RSA. Integrity verified.</p>
+    </section>
+  </div>
+
+<script>
+  const uploadForm = document.getElementById("uploadForm");
+  const fileInput = document.getElementById("fileInput");
+  const wrap = document.getElementById("uploadProgressWrap");
+  const bar  = document.getElementById("uploadBar");
+  const pct  = document.getElementById("uploadPct");
+
+  uploadForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!fileInput.files.length) return;
+
+    wrap.style.display = "flex";
+    bar.style.width = "0%";
+    pct.textContent = "0%";
+
+    const formData = new FormData(uploadForm);
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/", true);
+
+    xhr.upload.onprogress = (evt) => {
+      if (!evt.lengthComputable) return;
+      const p = Math.round((evt.loaded / evt.total) * 100);
+      bar.style.width = p + "%";
+      pct.textContent = p + "%";
+    };
+
+    xhr.onload = () => window.location.reload();
+    xhr.onerror = () => alert("Upload failed. Check server console.");
+
+    xhr.send(formData);
+  });
+</script>
+</body>
+</html>
