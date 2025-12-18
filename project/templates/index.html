@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Cloud Storage System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <div class="title-block">
+                <h1>Secure Cloud Storage System</h1>
+                <p class="subtitle">Enterprise Dashboard</p>
+            </div>
+            <div class="user">[User: Louis]</div>
+        </header>
+
+        <section class="card upload-card">
+            <div class="card-header">
+                <h2>Upload Center</h2>
+                <p>Hybrid encryption: AES-256 + RSA</p>
+            </div>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <label for="file" class="btn primary">Upload File</label>
+                <input type="file" id="file" name="file" required>
+            </form>
+            <div id="progressContainer" class="progress hidden">
+                <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                <span id="progressText">0%</span>
+            </div>
+        </section>
+
+        <section class="card table-card">
+            <div class="card-header">
+                <h2>Encrypted Files</h2>
+                <p>Files are stored securely with integrity verification.</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if files %}
+                            {% for f in files %}
+                                <tr>
+                                    <td>{{ f }}</td>
+                                    <td>
+                                        <a class="btn secondary" href="{{ url_for('download', filename=f) }}">Download</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="empty">No encrypted files yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="status">
+            All files encrypted using AES-256 + RSA. Integrity verified.
+        </footer>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('file');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        uploadForm.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', () => {
+            if (!fileInput.files.length) return;
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/', true);
+
+            xhr.upload.addEventListener('loadstart', () => {
+                progressContainer.classList.remove('hidden');
+                progressBar.style.width = '0%';
+                progressText.textContent = '0%';
+            });
+
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percent = Math.round((event.loaded / event.total) * 100);
+                    progressBar.style.width = `${percent}%`;
+                    progressText.textContent = `${percent}%`;
+                }
+            });
+
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    progressBar.style.width = '100%';
+                    progressText.textContent = '100%';
+                    window.location.reload();
+                }
+            };
+
+            xhr.send(formData);
+        });
+    </script>
+</body>
+</html>
